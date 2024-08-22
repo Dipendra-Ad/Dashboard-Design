@@ -1,0 +1,26 @@
+/* Background Colors */
+.bg-main {
+    background-color: #2a3447; 
+  }
+  
+  .bg-soft {
+    background-color: #384256; 
+  }
+  
+  .bg-dark {
+    background-color: #222b3c; 
+  }
+  
+  /* Text Colors */
+  .text-main {
+    color: white; 
+  }
+  
+  .text-soft {
+    color: #ddd; 
+  }
+  
+  .text-dark {
+    color: #2a3447; 
+  }
+  
