@@ -1,0 +1,46 @@
+.menu {
+  margin-bottom: 26px;
+  padding: 5px;
+  padding-left: 1px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.icon {
+  width: 24px; 
+  height: 24px; 
+  margin-right: 8px;
+}
+
+.listItemTitle {
+  font-size: 14px;
+}
+
+  
+  
+@media screen and (max-width: 1024px) {
+  .menu .item .title {
+    display: none;
+  }
+
+  .menu .item .listItem .listItemTitle {
+    display: none;
+  }
+}
