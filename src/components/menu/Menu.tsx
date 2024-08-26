@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { menu } from '../../data'; 
-import './menu.css';
-import { MenuItem as MenuItemType } from '../../types'; 
+import React from "react";
+import { Link } from "react-router-dom";
+import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { menu } from "../../data";
+import "./menu.css";
+//import { MenuItem as MenuItemType } from '../../types';
 
 const Menu: React.FC = () => {
   return (

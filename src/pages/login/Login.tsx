@@ -1,89 +1,118 @@
-import React, { useState } from 'react';
-import { TextField, Button, Typography, Container, Box, Link as MUILink } from '@mui/material';
-import { Link ,useNavigate } from 'react-router-dom'; // Import the Link component from react-router-dom
-import { validateUser } from '../../api/api'; // Import the mock API function
-import './login.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  // State for form inputs
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  // State for loading and error handling
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [response, setResponse] = useState<any>(null);
+
+  // Hook for navigation
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  // Handler for form submission
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(null); // Reset error before validation
+
+    setLoading(true);
+    setError(null);
 
     try {
-      const isValid = await validateUser({ username, password });
-      if (isValid) {
-        localStorage.setItem('user', JSON.stringify({ username }));
-        // Redirect to home page
-        navigate('/');
-      } else {
-        setError('Invalid username or password');
+      const res = await fetch("https://dummyjson.com/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          password,
+          expiresInMins: 30,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Login failed");
       }
-    } catch (error) {
-      setError('An error occurred. Please try again.');
+
+      const data = await res.json();
+      setResponse(data);
+
+      // Redirect to home page upon successful login
+      navigate("/");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        mt: 8,
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
+        Login
+      </Typography>
       <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: 3,
-          backgroundColor: '#ffffff',
-          borderRadius: 2,
-          boxShadow: 3,
-        }}
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ mt: 1, width: "100%" }}
       >
-        <Typography variant="h5">Login</Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-          />
-          {error && <Typography color="error" align="center">{error}</Typography>}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            Login
-          </Button>
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="body2" align="center">
-              {"Don't have an account? "}
-              <MUILink component={Link} to="/signup" variant="body2">
-                Sign Up
-              </MUILink>
-            </Typography>
-          </Box>
-        </Box>
+        <TextField
+          label="Username"
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          required
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          sx={{ mt: 2 }}
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
+        </Button>
+        {error && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {error}
+          </Typography>
+        )}
+        {response && (
+          <Typography variant="body2" sx={{ mt: 2, whiteSpace: "pre-line" }}>
+            {JSON.stringify(response, null, 2)}
+          </Typography>
+        )}
       </Box>
     </Container>
   );

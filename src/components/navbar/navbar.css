@@ -1,7 +1,5 @@
 .navbar {
-  background-color: #fff; 
   padding: 10px;
-
 }
 
 .logo {
@@ -16,23 +14,4 @@
 
 .logo-text {
   font-size: 1.2rem;
-}
-
-.icons {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-}
-
-.icon {
-  margin: 0 8px;
-}
-
-.notification {
-  display: flex;
-  align-items: center;
-}
-
-.notification span {
-  margin-left: 4px;
 }

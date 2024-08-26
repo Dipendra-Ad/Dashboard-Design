@@ -1,16 +1,21 @@
-import React from 'react';
-import { createBrowserRouter, RouterProvider, Route, Link, Outlet } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext'; // Adjust the import path as needed
-import Home from './pages/home/Home';
-import Users from './pages/users/Users';
-import Products from './pages/products/Products';
-import Navbar from './components/navbar/Navbar';
-import Menu from './components/menu/Menu';
-import Footer from './components/footer/Footer';
-import Login from './pages/login/Login';
-import Signup from './pages/signup/Signup';
-import './App.css';
-import './styles/global.css';
+import React from "react";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  Link,
+  Outlet,
+} from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext"; // Adjust the import path as needed
+import Home from "./pages/home/Home";
+import Users from "./pages/users/Users";
+import Suppliers from "./pages/suppliers/Suppliers";
+import Navbar from "./components/navbar/Navbar";
+import Menu from "./components/menu/Menu";
+import Footer from "./components/footer/Footer";
+import Login from "./pages/login/Login";
+import "./App.css";
+import "./styles/global.css";
 
 const Layout: React.FC = () => {
   const { isAuthenticated } = useAuth(); // Access authentication status
@@ -20,7 +25,7 @@ const Layout: React.FC = () => {
       <Navbar />
       <div className="container">
         <div className="menuContainer">
-          <Menu /> 
+          <Menu />
         </div>
         <div className="contentContainer">
           <Outlet />
@@ -46,18 +51,14 @@ const App: React.FC = () => {
           element: <Users />,
         },
         {
-          path: "/products",
-          element: <Products />,
+          path: "/suppliers",
+          element: <Suppliers />,
         },
       ],
     },
     {
       path: "/login",
       element: <Login />,
-    },
-    {
-      path: "/signup",
-      element: <Signup />,
     },
   ]);
 
