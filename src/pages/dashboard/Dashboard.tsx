@@ -28,7 +28,6 @@ const Dashboard: React.FC = () => {
         Dashboard
       </Typography>
       <Grid container spacing={3}>
-        {/* Project Summary Card */}
         <Grid item xs={12} sm={6} md={4}>
           <CustomCard>
             <CustomCardHeader
@@ -66,7 +65,6 @@ const Dashboard: React.FC = () => {
             </CustomCardContent>
           </CustomCard>
         </Grid>
-        {/* Completed Projects Card */}
         <Grid item xs={12} sm={6} md={4}>
           <CustomCard>
             <CustomCardHeader

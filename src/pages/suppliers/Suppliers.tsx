@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,6 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Grid from "@mui/material/Grid";
+import mockData from "../../data/mock_data.json";
 
 interface Column {
   id: "sNo" | "name" | "address" | "email" | "phone" | "actions";
@@ -32,6 +33,14 @@ const columns: readonly Column[] = [
   { id: "actions", label: "Actions", minWidth: 150, align: "right" },
 ];
 
+const rows = mockData.map((item: any) => ({
+  sNo: item.id,
+  name: item.full_name,
+  address: item.address,
+  email: item.email,
+  phone: item.phone,
+}));
+
 interface Data {
   sNo: number;
   name: string;
@@ -39,103 +48,6 @@ interface Data {
   email: string;
   phone: string;
 }
-
-function createData(
-  sNo: number,
-  name: string,
-  address: string,
-  email: string,
-  phone: string
-): Data {
-  return { sNo, name, address, email, phone };
-}
-
-const rows = [
-  createData(
-    1,
-    "John Doe",
-    "123 Elm St",
-    "john.doe@example.com",
-    "(555) 123-4567"
-  ),
-  createData(
-    2,
-    "Jane Smith",
-    "456 Oak St",
-    "jane.smith@example.com",
-    "(555) 234-5678"
-  ),
-  createData(
-    3,
-    "Alice Johnson",
-    "789 Pine St",
-    "alice.johnson@example.com",
-    "(555) 345-6789"
-  ),
-  createData(
-    4,
-    "Bob Brown",
-    "101 Maple St",
-    "bob.brown@example.com",
-    "(555) 456-7890"
-  ),
-  createData(
-    1,
-    "John Doe",
-    "123 Elm St",
-    "john.doe@example.com",
-    "(555) 123-4567"
-  ),
-  createData(
-    2,
-    "Jane Smith",
-    "456 Oak St",
-    "jane.smith@example.com",
-    "(555) 234-5678"
-  ),
-  createData(
-    3,
-    "Alice Johnson",
-    "789 Pine St",
-    "alice.johnson@example.com",
-    "(555) 345-6789"
-  ),
-  createData(
-    4,
-    "Bob Brown",
-    "101 Maple St",
-    "bob.brown@example.com",
-    "(555) 456-7890"
-  ),
-  createData(
-    1,
-    "John Doe",
-    "123 Elm St",
-    "john.doe@example.com",
-    "(555) 123-4567"
-  ),
-  createData(
-    2,
-    "Jane Smith",
-    "456 Oak St",
-    "jane.smith@example.com",
-    "(555) 234-5678"
-  ),
-  createData(
-    3,
-    "Alice Johnson",
-    "789 Pine St",
-    "alice.johnson@example.com",
-    "(555) 345-6789"
-  ),
-  createData(
-    4,
-    "Bob Brown",
-    "101 Maple St",
-    "bob.brown@example.com",
-    "(555) 456-7890"
-  ),
-];
 
 export default function SupplierTable() {
   const [page, setPage] = React.useState(0);
@@ -171,7 +83,7 @@ export default function SupplierTable() {
                   <IconButton
                     edge="end"
                     aria-label="search"
-                    style={{ color: "white" }}
+                    style={{ color: "success" }}
                   >
                     <SearchIcon />
                   </IconButton>
@@ -214,36 +126,29 @@ export default function SupplierTable() {
             <TableBody>
               {rows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.email}
-                    >
-                      {columns.map((column) => {
-                        const value = row[column.id as keyof Data];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.id === "actions" ? (
-                              <div>
-                                <IconButton size="small">
-                                  <EditIcon />
-                                </IconButton>
-                                <IconButton size="small" color="error">
-                                  <DeleteIcon />
-                                </IconButton>
-                              </div>
-                            ) : (
-                              value
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
+                .map((row: Data) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.email}>
+                    {columns.map((column) => {
+                      const value = row[column.id as keyof Data];
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {column.id === "actions" ? (
+                            <div>
+                              <IconButton size="small">
+                                <EditIcon />
+                              </IconButton>
+                              <IconButton size="small" color="error">
+                                <DeleteIcon />
+                              </IconButton>
+                            </div>
+                          ) : (
+                            value
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

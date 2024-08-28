@@ -2,21 +2,23 @@ import React, { MouseEvent } from "react";
 import {
   AppBar,
   Toolbar,
-  // IconButton,
   Typography,
   Menu,
   MenuItem,
   Button,
+  Box,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import "./navbar.css";
 
 const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
   const { isAuthenticated, logout } = useAuth();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleMenuClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -27,29 +29,30 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <AppBar position="static" className="navbar">
+    <AppBar position="static">
       <Toolbar>
-        <div className="logo">
-          <img src="logo.svg" alt="Logo" className="logo-image" />
-          <Typography variant="h6" className="logo-text">
+        <Box
+          display="flex"
+          alignItems="center"
+          sx={{ flexGrow: 1, mr: 2 }} // Margin right for spacing
+        >
+          <img src="logo.svg" alt="Logo" style={{ height: 40 }} />
+          <Typography variant="h6" sx={{ ml: 2 }}>
             Deep Admin
           </Typography>
-        </div>
-        <div
-          className="actions"
-          style={{ marginLeft: "auto", display: "flex", alignItems: "center" }}
-        >
+        </Box>
+        <Box display="flex" alignItems="center" sx={{ ml: "auto" }}>
           {isAuthenticated ? (
             <>
               <Button color="inherit" onClick={handleMenuClick}>
-                Logout
+                {isMobile ? "Menu" : "Account"}
               </Button>
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
                 PaperProps={{
-                  style: {
+                  sx: {
                     width: "200px",
                   },
                 }}
@@ -76,7 +79,7 @@ const Navbar: React.FC = () => {
               Login
             </Button>
           )}
-        </div>
+        </Box>
       </Toolbar>
     </AppBar>
   );

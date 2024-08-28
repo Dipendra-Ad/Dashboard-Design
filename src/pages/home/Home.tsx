@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, CssBaseline, Typography, Container } from "@mui/material";
 
-const Dashboard: React.FC = () => {
+const Home: React.FC = () => {
   return (
     <Box sx={{ display: "flex", height: "80vh" }}>
       <CssBaseline />
@@ -10,7 +10,7 @@ const Dashboard: React.FC = () => {
         sx={{
           flexGrow: 1,
           p: 5,
-          backgroundImage: 'url("../public/user.svg")', // Ensure this path is correct
+          backgroundImage: 'url("../public/user.svg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
           height: "80vh",
@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            background: "rgba(0, 0, 0, 0.5)", // Dark overlay
+            background: "rgba(0, 0, 0, 0.5)",
             zIndex: 0,
           },
         }}
@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center", // Center content vertically
+            justifyContent: "center",
           }}
         >
           <Typography
@@ -56,4 +56,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default Home;

@@ -17,7 +17,7 @@ export const menu = [
       {
         id: 3,
         title: "Dashboard",
-        url: "/users/1",
+        url: "/dashboard",
         icon: "user.svg",
       },
       {

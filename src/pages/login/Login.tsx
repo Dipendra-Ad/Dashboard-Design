@@ -10,18 +10,15 @@ import {
 } from "@mui/material";
 
 const Login: React.FC = () => {
-  // State for form inputs
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // State for loading and error handling
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<any>(null);
 
-  // Hook for navigation
   const navigate = useNavigate();
 
-  // Handler for form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -46,7 +43,6 @@ const Login: React.FC = () => {
       const data = await res.json();
       setResponse(data);
 
-      // Redirect to home page upon successful login
       navigate("/");
     } catch (err: any) {
       setError(err.message);

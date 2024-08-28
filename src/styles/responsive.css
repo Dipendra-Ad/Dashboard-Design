@@ -1,42 +1,40 @@
-/* Base styles */
 .container {
+  padding: 20px;
+  width: 100%;
+}
+
+/* Small devices (max-width: 480px) */
+@media screen and (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+}
+
+/* Medium devices (max-width: 768px) */
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+}
+
+/* Large devices (max-width: 1024px) */
+@media screen and (max-width: 1024px) {
+  .container {
     padding: 20px;
-    width: 100%;
+    margin: 0 auto;
   }
-  
-  /* Small devices (max-width: 480px) */
-  @media screen and (max-width: 480px) {
-    .container {
-      padding: 10px;
-    }
+}
+
+/* Extra large devices (max-width: 1200px) */
+@media screen and (max-width: 1200px) {
+  .container {
+    width: 90%;
   }
-  
-  /* Medium devices (max-width: 768px) */
-  @media screen and (max-width: 768px) {
-    .container {
-      padding: 15px;
-    }
+}
+
+/* Extra extra large devices (max-width: 1400px) */
+@media screen and (max-width: 1400px) {
+  .container {
+    width: 80%;
   }
-  
-  /* Large devices (max-width: 1024px) */
-  @media screen and (max-width: 1024px) {
-    .container {
-      padding: 20px;
-      margin: 0 auto;
-    }
-  }
-  
-  /* Extra large devices (max-width: 1200px) */
-  @media screen and (max-width: 1200px) {
-    .container {
-      width: 90%;
-    }
-  }
-  
-  /* Extra extra large devices (max-width: 1400px) */
-  @media screen and (max-width: 1400px) {
-    .container {
-      width: 80%;
-    }
-  }
-  
+}
