@@ -21,10 +21,13 @@ import {
   LocalShipping,
   LocalPostOffice,
   Devices,
-  People,
   Assignment,
   Settings,
+  People,
 } from "@mui/icons-material";
+import { getDrawerStyles } from "../../theme/menuTheme";
+import { menu } from "../../data/menuData";
+import { MenuSection, MenuItem } from "../../types";
 
 const iconMap: Record<string, React.ReactElement> = {
   home: <Home />,
@@ -50,6 +53,8 @@ const Menu: React.FC = () => {
     setOpen(!open);
   };
 
+  const styles = getDrawerStyles(theme);
+
   return (
     <Box>
       {isMobile && (
@@ -62,50 +67,24 @@ const Menu: React.FC = () => {
         open={open}
         onClose={handleToggle}
         variant={isMobile ? "temporary" : "persistent"}
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 240,
-            boxSizing: "border-box",
-            height: "100%",
-            backgroundColor: "#384256",
-          },
-        }}
+        sx={styles.drawer}
       >
-        <Box
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            backgroundColor: "#384256",
-          }}
-        >
-          {menu.map((item) => (
-            <Box key={item.id} sx={{ mb: 2 }}>
+        <Box sx={styles.container}>
+          {menu.map((section: MenuSection) => (
+            <Box key={section.id} sx={{ mb: 2 }}>
               <List>
-                {item.listItems.map((listItem) => (
+                {section.listItems.map((item: MenuItem) => (
                   <ListItem
                     button
                     component={Link}
-                    to={listItem.url}
-                    key={listItem.id}
-                    sx={{
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: theme.palette.grey[800],
-                      },
-                    }}
+                    to={item.url}
+                    key={item.id}
+                    sx={styles.listItem}
                   >
-                    <ListItemIcon
-                      sx={{
-                        color: "white",
-                      }}
-                    >
-                      {iconMap[listItem.icon]}
+                    <ListItemIcon sx={styles.listItemIcon}>
+                      {iconMap[item.icon]}
                     </ListItemIcon>
-                    <ListItemText primary={listItem.title} />
+                    <ListItemText primary={item.title} />
                   </ListItem>
                 ))}
               </List>
@@ -121,33 +100,24 @@ const Menu: React.FC = () => {
             p: 2,
             width: 240,
             height: "100%",
-            backgroundColor: "#384256",
+            backgroundColor: theme.palette.background.default,
           }}
         >
-          {menu.map((item) => (
-            <Box key={item.id} sx={{ mb: 2 }}>
+          {menu.map((section: MenuSection) => (
+            <Box key={section.id} sx={{ mb: 2 }}>
               <List>
-                {item.listItems.map((listItem) => (
+                {section.listItems.map((item: MenuItem) => (
                   <ListItem
                     button
                     component={Link}
-                    to={listItem.url}
-                    key={listItem.id}
-                    sx={{
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: theme.palette.grey[800],
-                      },
-                    }}
+                    to={item.url}
+                    key={item.id}
+                    sx={styles.listItem}
                   >
-                    <ListItemIcon
-                      sx={{
-                        color: "white",
-                      }}
-                    >
-                      {iconMap[listItem.icon]}
+                    <ListItemIcon sx={styles.listItemIcon}>
+                      {iconMap[item.icon]}
                     </ListItemIcon>
-                    <ListItemText primary={listItem.title} />
+                    <ListItemText primary={item.title} />
                   </ListItem>
                 ))}
               </List>
@@ -160,94 +130,3 @@ const Menu: React.FC = () => {
 };
 
 export default Menu;
-
-export const menu = [
-  {
-    id: 1,
-    listItems: [
-      {
-        id: 1,
-        title: "Homepage",
-        url: "/",
-        icon: "home",
-      },
-      {
-        id: 2,
-        title: "Profile",
-        url: "/users/1",
-        icon: "user",
-      },
-      {
-        id: 3,
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: "dashboard",
-      },
-      {
-        id: 4,
-        title: "Users",
-        url: "/users",
-        icon: "users",
-      },
-      {
-        id: 5,
-        title: "Timesheet",
-        url: "/timesheet",
-        icon: "product",
-      },
-      {
-        id: 6,
-        title: "Purchase Order",
-        url: "/orders",
-        icon: "order",
-      },
-      {
-        id: 7,
-        title: "Delivery Docket",
-        url: "/posts",
-        icon: "post2",
-      },
-    ],
-  },
-  {
-    id: 2,
-    listItems: [
-      {
-        id: 1,
-        title: "Equipment",
-        url: "/equipment",
-        icon: "element",
-      },
-      {
-        id: 2,
-        title: "Suppliers",
-        url: "/suppliers",
-        icon: "element",
-      },
-      {
-        id: 3,
-        title: "Resource Assigner",
-        url: "/resource",
-        icon: "note",
-      },
-      {
-        id: 4,
-        title: "Forms",
-        url: "/forms",
-        icon: "form",
-      },
-      {
-        id: 5,
-        title: "Files Manager",
-        url: "/calenders",
-        icon: "calendar",
-      },
-      {
-        id: 6,
-        title: "Settings",
-        url: "/setting",
-        icon: "setting",
-      },
-    ],
-  },
-];

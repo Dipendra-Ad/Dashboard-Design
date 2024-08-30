@@ -13,9 +13,11 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { getNavbarStyles } from "../../theme/navbarTheme";
+import { AnchorEl } from "../../types";
 
 const Navbar: React.FC = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<AnchorEl>(null);
   const { isAuthenticated, logout } = useAuth();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -28,16 +30,14 @@ const Navbar: React.FC = () => {
     setAnchorEl(null);
   };
 
+  const styles = getNavbarStyles(theme);
+
   return (
     <AppBar position="static">
       <Toolbar>
-        <Box
-          display="flex"
-          alignItems="center"
-          sx={{ flexGrow: 1, mr: 2 }} // Margin right for spacing
-        >
-          <img src="logo.svg" alt="Logo" style={{ height: 40 }} />
-          <Typography variant="h6" sx={{ ml: 2 }}>
+        <Box display="flex" alignItems="center" sx={{ flexGrow: 1, mr: 2 }}>
+          <img src="logo.svg" alt="Logo" style={styles.logo} />
+          <Typography variant="h6" sx={styles.title}>
             Deep Admin
           </Typography>
         </Box>
@@ -52,9 +52,7 @@ const Navbar: React.FC = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
                 PaperProps={{
-                  sx: {
-                    width: "200px",
-                  },
+                  sx: styles.menuPaper,
                 }}
               >
                 <MenuItem

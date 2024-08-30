@@ -1,49 +1,48 @@
-import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import Home from "./pages/home/Home";
-import Users from "./pages/users/Users";
-import Suppliers from "./pages/suppliers/Suppliers";
-import Login from "./pages/login/Login";
-import Dashboard from "./pages/dashboard/Dashboard";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./theme/globalTheme";
 import Layout from "./components/layout/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import LoadingSpinner from "./components/Spinner";
 import "./App.css";
 import "./styles/global.css";
 
-const App: React.FC = () => {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Layout />,
-      children: [
-        {
-          path: "/",
-          element: <Home />,
-        },
-        {
-          path: "/users",
-          element: <Users />,
-        },
-        {
-          path: "/suppliers",
-          element: <Suppliers />,
-        },
-        {
-          path: "/dashboard",
-          element: <Dashboard />,
-        },
-      ],
-    },
-    {
-      path: "/login",
-      element: <Login />,
-    },
-  ]);
+const Home = lazy(() => import("./pages/home/Home"));
+const Users = lazy(() => import("./pages/users/Users"));
+const Suppliers = lazy(() => import("./pages/suppliers/Suppliers"));
+const Login = lazy(() => import("./pages/login/Login"));
+const Dashboard = lazy(() => import("./pages/dashboard/Dashboard"));
 
+const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <ThemeProvider theme={theme}>
+      <AuthProvider>
+        <Router>
+          <Suspense fallback={<LoadingSpinner />}>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<ProtectedRoute element={<Home />} />} />
+                <Route
+                  path="users"
+                  element={<ProtectedRoute element={<Users />} />}
+                />
+                <Route
+                  path="suppliers"
+                  element={<ProtectedRoute element={<Suppliers />} />}
+                />
+                <Route
+                  path="dashboard"
+                  element={<ProtectedRoute element={<Dashboard />} />}
+                />
+              </Route>
+              <Route path="/login" element={<Login />} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 
