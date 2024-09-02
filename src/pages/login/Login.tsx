@@ -9,14 +9,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
+import { loginUser } from "../../Services/loginServices";
 import theme from "../../theme/loginTheme";
-import { LoginFormData, LoginResponse } from "../../types";
 
 const Login: React.FC = () => {
-  const [formData, setFormData] = useState<LoginFormData>({
-    username: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -29,20 +26,8 @@ const Login: React.FC = () => {
     setError(null);
 
     try {
-      const res = await fetch("https://dummyjson.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, expiresInMins: 30 }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data: LoginResponse = await res.json();
-
-      login();
-
+      const token = await loginUser(formData.username, formData.password);
+      login(token);
       navigate("/");
     } catch (err: any) {
       setError(err.message);

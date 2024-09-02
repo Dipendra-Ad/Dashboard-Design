@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, TextField, Grid, Box, Typography } from "@mui/material";
+import { Modal, Button, TextField, Grid, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Data } from "../../types";
 import { modalStyles } from "../../theme/editModalTheme";
+import LoadingSpinner from "../../components/Spinner";
 interface EditModalProps {
   open: boolean;
   onClose: () => void;
@@ -30,8 +31,6 @@ const EditModal: React.FC<EditModalProps> = ({
       onClose();
     }
   };
-
-  if (!open) return null;
 
   return (
     <Modal open={open} onClose={onClose} sx={styles.modal}>
@@ -97,7 +96,8 @@ const EditModal: React.FC<EditModalProps> = ({
             </Grid>
           </Grid>
         ) : (
-          <Typography variant="h6">Loading...</Typography>
+          <LoadingSpinner />
+          // <Typography variant="h6">Loading...</Typography>
         )}
       </Box>
     </Modal>

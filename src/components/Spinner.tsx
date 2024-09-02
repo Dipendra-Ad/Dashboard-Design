@@ -1,17 +1,10 @@
 import React from "react";
 import { CircularProgress, Box } from "@mui/material";
+import { loadingSpinnerStyles } from "../theme/spinnerTheme";
 
 const LoadingSpinner: React.FC = () => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "background.default",
-      }}
-    >
+    <Box sx={loadingSpinnerStyles}>
       <CircularProgress />
     </Box>
   );

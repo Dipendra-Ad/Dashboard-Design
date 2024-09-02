@@ -13,7 +13,7 @@ const Home: React.FC = () => {
   const styles = getHomeStyles(theme);
 
   return (
-    <Box sx={{ display: "flex", height: "80vh" }}>
+    <Box sx={styles.main}>
       <CssBaseline />
       <Box component="main">
         <Container maxWidth="lg" sx={styles.container}>

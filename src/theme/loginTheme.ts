@@ -18,6 +18,32 @@ const theme = createTheme({
     },
   },
   spacing: 8,
+  components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: 64,
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          marginTop: 16,
+        },
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          marginTop: 16,
+        },
+      },
+    },
+  },
 });
 
 export default theme;

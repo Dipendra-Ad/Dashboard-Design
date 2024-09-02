@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+//import { log } from "../utils/log";
 
 interface ProtectedRouteProps {
   element: React.ReactElement;
@@ -9,7 +10,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
   const { isAuthenticated } = useAuth();
 
-  console.log("ProtectedRoute - isAuthenticated:", isAuthenticated); // Debug log
+  // log("ProtectedRoute - isAuthenticated:", isAuthenticated);
 
   return isAuthenticated ? element : <Navigate to="/login" replace />;
 };

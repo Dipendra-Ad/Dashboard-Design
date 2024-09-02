@@ -59,3 +59,16 @@ export interface DeleteModalProps {
   onClose: () => void;
   onConfirm: () => void;
 }
+
+/// for authcontext
+
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  token: string | null;
+  login: (token: string) => void;
+  logout: () => void;
+}
+
+export interface AuthProviderProps {
+  children: React.ReactNode;
+}

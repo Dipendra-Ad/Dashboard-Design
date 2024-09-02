@@ -1,6 +1,27 @@
-import { Theme } from "@mui/material/styles";
+import { Theme, SxProps } from "@mui/material/styles";
 
-export const getHomeStyles = (theme: Theme) => ({
+declare module "@mui/material/styles" {
+  interface Theme {
+    home: {
+      container: React.CSSProperties;
+      title: React.CSSProperties;
+      text: React.CSSProperties;
+      main: React.CSSProperties;
+    };
+  }
+  interface ThemeOptions {
+    home?: {
+      container?: React.CSSProperties;
+      title?: React.CSSProperties;
+      text?: React.CSSProperties;
+      main?: React.CSSProperties;
+    };
+  }
+}
+
+export const getHomeStyles = (
+  theme: Theme
+): { [key: string]: SxProps<Theme> } => ({
   main: {
     flexGrow: 1,
     p: 5,
@@ -39,3 +60,5 @@ export const getHomeStyles = (theme: Theme) => ({
     color: "white",
   },
 });
+
+export default getHomeStyles;
