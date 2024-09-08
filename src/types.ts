@@ -1,3 +1,22 @@
+///login
+
+// src/pages/login/types.ts
+import { z } from "zod";
+import { loginSchema } from "../src/pages/login/loginSchema";
+
+export interface LoginFormData {
+  username: string;
+  password: string;
+}
+// Define the FormData type inferred from the Zod schema
+export type FormData = z.infer<typeof loginSchema>;
+
+// Define types for the login response
+export interface LoginResponse {
+  token: string;
+  expiresIn: number;
+}
+
 // navbar section
 export type AnchorEl = null | HTMLElement;
 
@@ -40,17 +59,6 @@ export interface Project {
   title: string;
   status: string;
   completedOn?: string;
-}
-
-///login
-export interface LoginFormData {
-  username: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  token: string;
-  expiresIn: number;
 }
 
 // delete modal props

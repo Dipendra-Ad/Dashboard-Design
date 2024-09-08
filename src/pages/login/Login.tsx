@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -8,31 +8,34 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../login/loginSchema"; 
 import { useAuth } from "../../context/AuthContext";
 import { loginUser } from "../../Services/loginServices";
 import theme from "../../theme/loginTheme";
+import { FormData } from "../../types";
 
 const Login: React.FC = () => {
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(loginSchema),
+  });
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    setLoading(true);
-    setError(null);
-
+  const onSubmit = async (data: FormData) => {
     try {
-      const token = await loginUser(formData.username, formData.password);
+      setSubmitError(null); 
+      const token = await loginUser(data.username, data.password);
       login(token);
       navigate("/");
     } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      setSubmitError(err.message || "An unexpected error occurred");
     }
   };
 
@@ -52,31 +55,41 @@ const Login: React.FC = () => {
       </Typography>
       <Box
         component="form"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         sx={{ mt: theme.spacing(1), width: "100%" }}
       >
-        <TextField
-          label="Username"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          required
-          value={formData.username}
-          onChange={(e) =>
-            setFormData({ ...formData, username: e.target.value })
-          }
+        <Controller
+          name="username"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Username"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+              error={!!errors.username}
+              helperText={errors.username?.message as string}
+            />
+          )}
         />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          required
-          value={formData.password}
-          onChange={(e) =>
-            setFormData({ ...formData, password: e.target.value })
-          }
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Password"
+              type="password"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+              error={!!errors.password}
+              helperText={errors.password?.message as string}
+            />
+          )}
         />
         <Button
           type="submit"
@@ -84,13 +97,17 @@ const Login: React.FC = () => {
           variant="contained"
           color="primary"
           sx={{ mt: theme.spacing(2) }}
-          disabled={loading}
+          disabled={isSubmitting}
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
+          {isSubmitting ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Login"
+          )}
         </Button>
-        {error && (
+        {submitError && (
           <Typography color="error" sx={{ mt: theme.spacing(2) }}>
-            {error}
+            {submitError}
           </Typography>
         )}
       </Box>

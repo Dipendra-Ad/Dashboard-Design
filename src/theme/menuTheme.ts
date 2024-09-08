@@ -1,8 +1,9 @@
 import { Theme } from "@mui/material/styles";
+const DRAWER_WIDTH = 240;
 
 export const getDrawerStyles = (theme: Theme) => ({
   drawer: {
-    width: 240,
+    width: DRAWER_WIDTH,
     flexShrink: 0,
     "& .MuiDrawer-paper": {
       width: 240,

@@ -1,4 +1,5 @@
 import { Theme } from "@mui/material/styles";
+const DEl_WIDTH = 400;
 
 export const deleteModalStyles = (theme: Theme) => ({
   modal: {
@@ -7,7 +8,7 @@ export const deleteModalStyles = (theme: Theme) => ({
     justifyContent: "center",
   },
   container: {
-    width: 400,
+    width: DEl_WIDTH,
     padding: theme.spacing(2),
     bgcolor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
