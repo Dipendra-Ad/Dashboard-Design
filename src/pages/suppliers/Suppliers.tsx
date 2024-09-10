@@ -21,8 +21,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import mockData from "../../data/mock_data.json";
 import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
+import AddSupplierModal from "./AddSupplierModal";
 import { Data } from "../../types";
 import supplierTheme from "../../theme/supplierTheme";
+import * as XLSX from "xlsx";
+import papa from "papaparse";
 
 const columns = [
   { id: "sNo", label: "S.No", minWidth: 50 },
@@ -33,7 +36,7 @@ const columns = [
   { id: "actions", label: "Actions", minWidth: 150, align: "right" as const },
 ];
 
-const rows = mockData.map((item: any) => ({
+const transformedData: Data[] = mockData.map((item: any) => ({
   sNo: item.id,
   name: item.full_name,
   address: item.address,
@@ -42,13 +45,23 @@ const rows = mockData.map((item: any) => ({
 }));
 
 export default function SupplierTable() {
-  const [data, setData] = useState<Data[]>(rows);
+  const [data, setData] = useState<Data[]>(transformedData);
   const [editingRow, setEditingRow] = useState<Data | null>(null);
   const [deletingRow, setDeletingRow] = useState<Data | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [addModalOpen, setAddModalOpen] = useState(false);
+
+  const filteredData = data.filter((row) =>
+    Object.values(row).some(
+      (value) =>
+        typeof value == "string" &&
+        value.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
 
   const handleEditClick = (row: Data) => {
     setEditingRow(row);
@@ -76,6 +89,36 @@ export default function SupplierTable() {
     setDeleteModalOpen(false);
   };
 
+  const handleAdd = (supplier: Data) => {
+    setData((prevRows) => [...prevRows, supplier]);
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      if (file.type.includes("csv")) {
+        papa.parse(file, {
+          complete: (results) => {
+            setData(results.data as Data[]);
+          },
+          header: true,
+        });
+      } else if (file.type.includes("sheet") || file.type.includes("excel")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target && e.target.result) {
+            const data = new Uint8Array(e.target.result as ArrayBuffer);
+            const workbook = XLSX.read(data, { type: "array" });
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = XLSX.utils.sheet_to_json<Data>(worksheet);
+            setData(json);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    }
+  };
+
   return (
     <ThemeProvider theme={supplierTheme}>
       <div>
@@ -99,6 +142,8 @@ export default function SupplierTable() {
                   ),
                 }}
                 fullWidth
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
               />
             </Grid>
             <Grid
@@ -111,13 +156,23 @@ export default function SupplierTable() {
               spacing={2}
             >
               <Grid item>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" component="label">
                   Import Suppliers
+                  <input
+                    type="file"
+                    accept=".csv, .xlsx"
+                    hidden
+                    onChange={handleFileUpload}
+                  />
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant="contained" color="secondary">
-                  Export Suppliers
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setAddModalOpen(true)}
+                >
+                  Add New Supplier
                 </Button>
               </Grid>
             </Grid>
@@ -140,7 +195,7 @@ export default function SupplierTable() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data
+                {filteredData
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row: Data) => (
                     <TableRow hover role="checkbox" tabIndex={-1} key={row.sNo}>
@@ -200,6 +255,12 @@ export default function SupplierTable() {
           open={deleteModalOpen}
           onClose={() => setDeleteModalOpen(false)}
           onConfirm={handleDelete}
+        />
+        <AddSupplierModal
+          open={addModalOpen}
+          onClose={() => setAddModalOpen(false)}
+          onAdd={handleAdd}
+          existingData={data}
         />
       </div>
     </ThemeProvider>

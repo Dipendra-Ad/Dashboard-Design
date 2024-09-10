@@ -52,6 +52,19 @@ export interface Data {
   email: string;
   phone: string;
 }
+//addModalsuppliers
+declare module "papaparse" {
+  export const papa: any;
+  // export default papa;
+}
+
+// Define the props for AddSupplierModal component
+export interface AddSupplierModalProps {
+  open: boolean;
+  onClose: () => void;
+  onAdd: (supplier: Data) => void;
+  existingData: Data[];
+}
 
 // dashboard
 export interface Project {
