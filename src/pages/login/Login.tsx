@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -8,46 +8,34 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../login/loginSchema"; 
+import { useAuth } from "../../context/AuthContext";
+import { loginUser } from "../../Services/loginServices";
+import theme from "../../theme/loginTheme";
+import { FormData } from "../../types";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [response, setResponse] = useState<any>(null);
-
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(loginSchema),
+  });
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    setLoading(true);
-    setError(null);
-
+  const onSubmit = async (data: FormData) => {
     try {
-      const res = await fetch("https://dummyjson.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          password,
-          expiresInMins: 30,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await res.json();
-      setResponse(data);
-
+      setSubmitError(null); 
+      const token = await loginUser(data.username, data.password);
+      login(token);
       navigate("/");
     } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      setSubmitError(err.message || "An unexpected error occurred");
     }
   };
 
@@ -59,7 +47,7 @@ const Login: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        mt: 8,
+        mt: theme.spacing(8),
       }}
     >
       <Typography variant="h5" gutterBottom>
@@ -67,46 +55,59 @@ const Login: React.FC = () => {
       </Typography>
       <Box
         component="form"
-        onSubmit={handleSubmit}
-        sx={{ mt: 1, width: "100%" }}
+        onSubmit={handleSubmit(onSubmit)}
+        sx={{ mt: theme.spacing(1), width: "100%" }}
       >
-        <TextField
-          label="Username"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          required
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+        <Controller
+          name="username"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Username"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+              error={!!errors.username}
+              helperText={errors.username?.message as string}
+            />
+          )}
         />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Password"
+              type="password"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+              error={!!errors.password}
+              helperText={errors.password?.message as string}
+            />
+          )}
         />
         <Button
           type="submit"
           fullWidth
           variant="contained"
           color="primary"
-          sx={{ mt: 2 }}
-          disabled={loading}
+          sx={{ mt: theme.spacing(2) }}
+          disabled={isSubmitting}
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
+          {isSubmitting ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Login"
+          )}
         </Button>
-        {error && (
-          <Typography color="error" sx={{ mt: 2 }}>
-            {error}
-          </Typography>
-        )}
-        {response && (
-          <Typography variant="body2" sx={{ mt: 2, whiteSpace: "pre-line" }}>
-            {JSON.stringify(response, null, 2)}
+        {submitError && (
+          <Typography color="error" sx={{ mt: theme.spacing(2) }}>
+            {submitError}
           </Typography>
         )}
       </Box>

@@ -6,87 +6,79 @@ import {
   CardContent,
   CardHeader,
   Divider,
+  useTheme,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { getDashboardStyles } from "../../theme/dashboardTheme";
+import { Project } from "../../types";
 
-const CustomCard = styled(Card)({
-  height: "100%",
-});
-
-const CustomCardHeader = styled(CardHeader)({
-  backgroundColor: "#f5f5f5",
-});
-
-const CustomCardContent = styled(CardContent)({
-  padding: "16px",
-});
+const projects: Project[] = [
+  { id: 1, title: "Project Alpha", status: "In Progress" },
+  { id: 2, title: "Project Beta", status: "In Progress" },
+  { id: 3, title: "Project Gamma", status: "In Progress" },
+  {
+    id: 4,
+    title: "Project Delta",
+    status: "Completed",
+    completedOn: "2024-08-20",
+  },
+  {
+    id: 5,
+    title: "Project Epsilon",
+    status: "Completed",
+    completedOn: "2024-07-15",
+  },
+  {
+    id: 6,
+    title: "Project Zeta",
+    status: "Completed",
+    completedOn: "2024-06-10",
+  },
+];
 
 const Dashboard: React.FC = () => {
+  const theme = useTheme();
+  const styles = getDashboardStyles(theme);
+
+  const renderProjectCards = (projects: Project[]) =>
+    projects.map((project) => (
+      <Grid item xs={12} sm={6} md={4} key={project.id}>
+        <Card sx={styles.card}>
+          <CardHeader sx={styles.cardHeader} title={project.title} />
+          <CardContent sx={styles.cardContent}>
+            <Typography variant="body1">
+              {project.completedOn
+                ? `Completed on: ${project.completedOn}`
+                : `Status: ${project.status}`}
+            </Typography>
+            <Divider sx={styles.divider} />
+          </CardContent>
+        </Card>
+      </Grid>
+    ));
+
+  const inProgressProjects = projects.filter(
+    (project) => project.status === "In Progress"
+  );
+  const completedProjects = projects.filter(
+    (project) => project.status === "Completed"
+  );
+
   return (
     <div>
       <Typography variant="h4" gutterBottom>
         Dashboard
       </Typography>
+      <Typography variant="h5" gutterBottom>
+        In Progress Tasks
+      </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={4}>
-          <CustomCard>
-            <CustomCardHeader
-              title="Project Summary"
-              subheader="Overview of all projects"
-            />
-            <CustomCardContent>
-              <Typography variant="h6">Total Projects: 10</Typography>
-              <Typography variant="body1">Completed: 6</Typography>
-              <Typography variant="body1">In Progress: 3</Typography>
-              <Typography variant="body1">On Hold: 1</Typography>
-            </CustomCardContent>
-          </CustomCard>
-        </Grid>
-        {/* Active Projects Card */}
-        <Grid item xs={12} sm={6} md={4}>
-          <CustomCard>
-            <CustomCardHeader
-              title="Active Projects"
-              subheader="Projects currently in progress"
-            />
-            <CustomCardContent>
-              <Typography variant="h6">Project Alpha</Typography>
-              <Typography variant="body1">Status: In Progress</Typography>
-              <Divider />
-              <Typography variant="h6" style={{ marginTop: "16px" }}>
-                Project Beta
-              </Typography>
-              <Typography variant="body1">Status: In Progress</Typography>
-              <Divider />
-              <Typography variant="h6" style={{ marginTop: "16px" }}>
-                Project Gamma
-              </Typography>
-              <Typography variant="body1">Status: In Progress</Typography>
-            </CustomCardContent>
-          </CustomCard>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <CustomCard>
-            <CustomCardHeader
-              title="Completed Projects"
-              subheader="Projects that have been completed"
-            />
-            <CustomCardContent>
-              <Typography variant="h6">Project Delta</Typography>
-              <Typography variant="body1">Completed on: 2024-08-20</Typography>
-              <Divider />
-              <Typography variant="h6" style={{ marginTop: "16px" }}>
-                Project Epsilon
-              </Typography>
-              <Typography variant="body1">Completed on: 2024-07-15</Typography>
-              <Divider />
-              <Typography variant="h6" style={{ marginTop: "16px" }}>
-                Project Zeta
-              </Typography>
-              <Typography variant="body1">Completed on: 2024-06-10</Typography>
-            </CustomCardContent>
-          </CustomCard>
-        </Grid>
+        {renderProjectCards(inProgressProjects)}
+      </Grid>
+      <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
+        Completed Tasks
+      </Typography>
+      <Grid container spacing={3}>
+        {renderProjectCards(completedProjects)}
       </Grid>
     </div>
   );
